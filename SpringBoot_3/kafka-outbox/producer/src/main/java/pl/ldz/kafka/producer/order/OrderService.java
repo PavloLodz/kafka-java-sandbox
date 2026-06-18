@@ -25,7 +25,7 @@ public class OrderService {
   }
 
   @Transactional
-  public Order createOrder(OrderRequest request) throws Exception {
+  public OrderResponse createOrder(OrderRequest request) throws Exception {
     Order order = orderRepository.save(new Order(request));
 
     OrderEventDto event = new OrderEventDto(
@@ -40,6 +40,6 @@ public class OrderService {
     outbox.setPayload(objectMapper.writeValueAsString(event));
     outboxRepository.save(outbox);
 
-    return order;
+    return OrderResponse.from(order);
   }
 }
